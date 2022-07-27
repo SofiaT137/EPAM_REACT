@@ -1,3 +1,9 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -6,12 +12,11 @@ body {
   overflow: hidden;
 }
 
-.header,
 .footer {
   display: flex;
   align-items: center;
   position: absolute;
-  background-color: rgb(37, 45, 45);
+  background-color: #262626;
   color: grey;
   font-size: 15px;  
   left: 0;
@@ -19,19 +24,14 @@ body {
   height: 50px;
 }
 
-.header{
-  justify-content: space-between;
+ .header{
   top: 0;
-}
-
-.header h2 {
-  margin-left: 20px;
 }
 
 .footer {
   justify-content: center;
   bottom: 0;
-}
+} 
 
 .loginForm {
   display: flex;
@@ -81,6 +81,13 @@ form > button {
   height: 25px;  
   color: #e9f4fb;
 }
+
+.openModalWindowbtn {
+  margin: 90px 10px;
+  padding: 20px;
+  font-size: 1rem;
+}
+
 
 @media (max-width: 321px) {
   .loginForm {

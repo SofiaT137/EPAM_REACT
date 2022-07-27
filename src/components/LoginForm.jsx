@@ -30,6 +30,7 @@ export const LoginForm = () => {
       );
       const data = await response.json();
       if (response.status === 200) {
+        localStorage.setItem('login', data.login)
         navigate("/certificates")
       }else {
         setError(data.exceptionMessage)
@@ -37,6 +38,7 @@ export const LoginForm = () => {
   };
 
   return (
+    <div className="MainWindow">
     <div className="loginForm">
       <div className="formName">
         <h2>Login</h2>
@@ -87,6 +89,7 @@ export const LoginForm = () => {
           Login
         </button>
       </form>
+    </div>
     </div>
   );
 };
