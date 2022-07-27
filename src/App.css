@@ -33,53 +33,21 @@ body {
   bottom: 0;
 } 
 
-.loginForm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  background-color: white;
+#form {
+  background-color: #fff;
   border-radius: 5px;
+  padding: 20px;
+  margin-top: 5%;
 }
 
-.formName {
- box-sizing: border-box;
- background-color: lightgrey;
- width: 100%;
- display: flex;
- justify-content: center;
-}
-
-form > .txtField {
-  position: relative;
-}
-
-.txtField > input {
-  width: 245px;
-  height: 25px;
-}
-
-form {
+.mb-4 {
+  color: blue;
   display: flex;
-  align-items: center;
-  flex-direction: column;
-  margin-top: 30px;
-  gap: 30px;
+  justify-content: center;
 }
 
-form > button {
-  margin-bottom: 20px;
-  width: 30%;
-  background-color: #2691d9;
-  border: none;
-  border-radius: 5px;
-  height: 25px;  
-  color: #e9f4fb;
+.errorMSG {
+  color: red;
 }
 
 .openModalWindowbtn {

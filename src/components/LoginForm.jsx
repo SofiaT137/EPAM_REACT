@@ -1,17 +1,32 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useInput } from "./../hookies/useInput";
+import {useForm} from "react-hook-form";
 
 export const LoginForm = () => {
-  const login = useInput("", { isEmpty: true, minLength: 3, maxLength: 30 });
-  const password = useInput("", { isEmpty: true, minLength: 3, maxLength: 30 });
 
-  const navigate = useNavigate();
+  const {
+    register, 
+    formState: {
+      errors, isValid
+    },
+    handleSubmit,
+    reset
+  } = useForm({
+    mode:"onBlur"
+  });
 
-  const [error, setError] = useState(null);
+const navigate = useNavigate();
+
+const [error, setError] = useState(null);
+
+const onSubmit=(data)=> {
+  sendLoginRequest();
+}
 
   const sendLoginRequest = async (event) => {
-    event.preventDefault();
+    const login = document.querySelector('#login');
+    const password = document.querySelector('#password');    
+
     const reqBody = {
       login: login.value,
       password: password.value,
@@ -28,7 +43,7 @@ export const LoginForm = () => {
           body: JSON.stringify(reqBody),
         }
       );
-      const data = await response.json();
+      const data = await response.json();      
       if (response.status === 200) {
         localStorage.setItem('login', data.login)
         navigate("/certificates")
@@ -38,59 +53,45 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="MainWindow">
-    <div className="loginForm">
-      <div className="formName">
-        <h2>Login</h2>
-      </div>
-      <form>
-        <div className="txtField">
-          <input
-            onChange={(e) => login.onChange(e)}
-            onBlur={(e) => login.onBlur(e)}
-            value={login.value}
-            name="login"
-            type="text"
-            placeholder="Username"
-          />
-          {login.isDirty && (
-                    <div style={{ color: "red" }}>
-                    {login.isEmpty && (' Login cannot be empty!')}
-                    {login.minLengthError && ('Min login length is 3')}
-                    {login.maxLengthError && ('Max login length is 30')}
-                    </div>
-                )}
-        </div>
-        <div className="txtField">
-          <input
-            onChange={(e) => password.onChange(e)}
-            onBlur={(e) => password.onBlur(e)}
-            value={password.value}
-            name="password"
-            type="password"
-            placeholder="Password"
-          />
-          {password.isDirty && password.isEmpty && (
-            <div style={{ color: "red" }}> Password cannot be empty!</div>
-          )}
-          {password.isDirty && password.minLengthError && (
-            <div style={{ color: "red" }}> Min password length is 3</div>
-          )}
-          {password.isDirty && password.maxLengthError && (
-            <div style={{ color: "red" }}> Max password length is 30</div>
-          )}
-        </div>
-        {!!error && (<div style={{color: "red"}}>{error}</div>)}
-        <button
-          disabled={!login.inputValid || !password.inputValid}
-        type="submit"
-          onClick={sendLoginRequest}
-        >
-          Login
-        </button>
-      </form>
-    </div>
-    </div>
+    <div id='form' className="col-8 col-md-4  mx-auto">
+    <h3 id="form__head" className="mb-4">Registration Form</h3>
+    <form id="newform" onSubmit={handleSubmit(onSubmit)} noValidate>      
+        <div className="form-group p-1">
+            <label htmlFor="login"> Login </label>
+            <input type="text" className="form-control" id="login" {...register('login', {
+              required: "Login cannot be empty!",
+              minLength: {
+                value:3,
+                message:"Minimum login length is 3"
+              },
+              maxLength: {
+                value:30,
+                message:"Maximum login length is 30"
+              },
+            })}/>
+          </div>
+        <div className="errorMSG">{errors?.login && <p>
+          {errors?.login?.message || "Error!"}</p>}</div>
+        <div className="form-group p-1">
+            <label htmlFor="password"> Password </label>
+            <input type="password" className="form-control" id="password" {...register('password', {
+              required: "Password cannot be empty!",
+              minLength: {
+                value:3,
+                message:"Minimum password length is 3"
+              },
+              maxLength: {
+                value:30,
+                message:"Maximum password length is 30"
+              },
+            })}/>
+          </div>
+        <div className="errorMSG">{errors?.password && 
+        <p>{errors?.password?.message || "Error!"}</p>}</div>
+        <button type="submit" className=" mt-4 d-block w-100 btn btn-primary" disabled={!isValid}>Submit</button>
+        <div className="errorMSG">{error}</div>
+      </form>    
+</div>
   );
 };
 
