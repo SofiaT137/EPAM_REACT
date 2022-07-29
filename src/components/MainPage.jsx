@@ -55,8 +55,16 @@ export const MainPage = () => {
     })
   },[query, page])
 
+  const getTagsName = (tags) => {
+      let finalString = '';
+      tags.forEach(tag => {
+        finalString += tag.name+' '
+      });
+      return finalString;
+  }
+
   return (
-    <Container sx={{marginTop: 5}} maxWidth="md">
+    <Container sx={{marginTop: 2}} maxWidth="md">
         <TextField sx={{m:1, backgroundColor: "white", borderRadius:"5px",border:"none"}}
         fullWidth
         label="Find a certificate"
@@ -72,9 +80,9 @@ export const MainPage = () => {
                <TableRow>
                  <StyledTableCell>Title</StyledTableCell>
                  <StyledTableCell align="center">Create date</StyledTableCell>
-                 {/* <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-                 <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-                 <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell> */}
+                 <StyledTableCell align="center">Tags</StyledTableCell>
+                 <StyledTableCell align="center">Price</StyledTableCell>
+                 <StyledTableCell align="center">Actions</StyledTableCell>
                </TableRow>
              </TableHead>
              <TableBody>
@@ -84,9 +92,15 @@ export const MainPage = () => {
                      {certificate.giftCertificateName}
                    </StyledTableCell>
                    <StyledTableCell align="center">{certificate.createDate}</StyledTableCell>
-                   {/* <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                   <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                   <StyledTableCell align="right">{row.protein}</StyledTableCell> */}
+                   <StyledTableCell align="center">{getTagsName(certificate.tags)}</StyledTableCell>
+                   <StyledTableCell align="center">{certificate.price}</StyledTableCell>
+                   <StyledTableCell align="center">
+                   <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" style={{fontSize:"12px"}} className="btn btn-primary">View</button>
+                      <button type="button" style={{fontSize:"12px"}} className="btn btn-info">Edit</button>
+                      <button type="button" style={{fontSize:"12px"}} className="btn btn-light">Delete</button>
+                    </div>
+                   </StyledTableCell>
                  </StyledTableRow>
                ))}
              </TableBody>
