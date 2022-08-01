@@ -4,13 +4,18 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
   background: rgb(2,0,36);
-background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(21,200,210,0.208018241476278) 40%, rgba(0,212,255,1) 100%);
-  overflow: hidden;
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(21,200,210,0.208018241476278) 40%, rgba(0,212,255,1) 100%);
+  display: flex;
+  flex-direction: column;
+  /* overflow: hidden; */
 }
 
 .footer {
@@ -23,6 +28,7 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(21,200,210,0.20801824
   left: 0;
   width: 100%;
   height: 50px;
+  flex-shrink: 0;
 }
 
  .header{
@@ -31,7 +37,7 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(21,200,210,0.20801824
 
 .footer {
   justify-content: center;
-  bottom: 0;
+  /* bottom: 0; */
 } 
 
 #form {
