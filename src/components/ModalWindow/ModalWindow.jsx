@@ -1,4 +1,4 @@
-import Modal from './../CSS/Modal.css'
+import  './../../CSS/Modal.css'
 
 export const ModalWindow = ({active, setActive, children}) => {
     return (

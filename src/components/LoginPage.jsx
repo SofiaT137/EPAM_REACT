@@ -2,15 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
-export const LoginForm = () => {
+export const LoginPage = () => {
 
   const {
     register, 
     formState: {
       errors, isValid
     },
-    handleSubmit,
-    reset
+    handleSubmit
   } = useForm({
     mode:"onBlur"
   });
@@ -46,6 +45,7 @@ const onSubmit=(data)=> {
       const data = await response.json();      
       if (response.status === 200) {
         localStorage.setItem('login', data.login)
+        localStorage.setItem('token',data.token)
         navigate("/certificates")
       }else {
         setError(data.exceptionMessage)

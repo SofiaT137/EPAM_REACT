@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {Container, Pagination, TextField, Stack} from "@mui/material";
-import { styled } from '@mui/material/styles';
+import {Container, Pagination, TextField, Stack, duration} from "@mui/material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import { ModalWindowDelete } from "./ModalWindowDelete";
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import { ModalWindowDelete } from "././ModalWindow/ModalWindowDelete";
+import { ModalWindowItem } from "././ModalWindow/ModalWindowItem";
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import SearchIcon from '@mui/icons-material/Search';
 import Paper from '@mui/material/Paper';
 import { useRef } from "react";
-const BASE_URL = "http://localhost:8085/module2/gift_certificates/filter/?sortByCreationDate=desc";
+import StyledTableCell from './StyleTable/StyledTableCell'; 
+import StyledTableRow from './StyleTable/StyledTableRow'; 
+const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
+
 
 export const MainPage = () => {
   const [certificates, setCertificates] = useState([]);
@@ -20,49 +22,48 @@ export const MainPage = () => {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [pageQty, setPageQty] = useState(0);
-  const [modalActive, setModalActive] = useState(false);
-  const [changeId, setChangeId] = useState('');
+  const [modalDelete, setModalDelete] = useState(false);
+  const [modalView, setModalView] = useState(false);
+  const [itemId, setItemId] = useState('');
+  const [itemName, setItemName] = useState('');
+  const [itemDescription, setItemDescription] = useState('');
+  const [itemPrice, setItemPrice] = useState('');
+  const [itemDuration, setItemDuration] = useState('');
+  const [itemCreatedDate, setItemCreatedDate] = useState('');
+  const [itemLastModifyedDate, setItemLastModifyedDate] = useState('');
+  const [itemTags, setItemTags] = useState('');
   const certificateIdRef = useRef();
-  
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
-    '&:last-child td, &:last-child th': {
-      border: 0,
-    },
-  }));
 
+  const viewLogic = (id,name,description,price,duration,createdDate,lastModifyedDate,tags) => {
+    setModalView(true);
+    setItemId(id);
+    setItemName(name);
+    setItemDescription(description);
+    setItemPrice(price);
+    setItemDuration(duration);
+    setItemCreatedDate(createdDate);
+    setItemLastModifyedDate(lastModifyedDate);
+    setItemTags(getTagsName(tags));    
+  }
+ 
+  const deleteLogic = (id) => {
+    setModalDelete(true);
+    setItemId(id);
+    certificateIdRef.current = id;
+  }
 
-  useEffect(() => {
-    let URL = query === '' ? BASE_URL + `&pageNumber=${page-1}`: BASE_URL + `${query}&pageNumber=${page-1}`
+  useEffect(() => { 
+    URL = BASE_URL + `filter/?sortByCreationDate=desc${query}&pageNumber=${page-1}`;
     axios.get(URL).then(
       ({data}) => {
       setCertificates(data.content)
-      setPageQty(data.totalPages) 
+      setPageQty(data.totalPages)  
       if(data.totalPages < page) {
         setPage(1);
       }
     })
   },[query, page])
 
-  const getTagsName = (tags) => {
-      let finalString = '';
-      tags.forEach(tag => {
-        finalString += tag.name+' '
-      });
-      return finalString;
-  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -72,7 +73,8 @@ export const MainPage = () => {
   }
 
     const getQuery = (input) => {
-    setQuery('');
+    setQuery('')
+    setPage(1)
     var tagString = ''
     var nameString = ''
     var descriptionString = ''
@@ -86,23 +88,48 @@ export const MainPage = () => {
       }
     });    
     let finalQuery = tagString === '' ? nameString+descriptionString:tagString+nameString+descriptionString;
-    console.log(finalQuery)
-      return setQuery(finalQuery);
+    return setQuery(finalQuery);
   }
 
   const areUSureDelete = (choose) => {
+    const headers = { 
+      'Authorization': 'Bearer_' + localStorage.getItem('token'),
+    };
     if(choose){
       setCertificates(certificates.filter(c => c.id !== certificateIdRef.current))
+      const element = document.querySelector('#delete-request-error-handling .status');
+      axios.delete(BASE_URL + certificateIdRef.current, {headers})
+      .then(response => console.log(response.status))
+      .catch(error => {
+        element.parentElement.innerHTML = `Error: ${error.message}`;
+        console.error('There was an error!', error);
+    });
+      setModalDelete(false);      
+      setQuery(query);
+      setPage(page);
     }else {
-      console.log('else')
+      setModalDelete(false);
     }
   }
 
-  const deleteLogic = (id) => {
-    setModalActive(true);
-    setChangeId(id);
-    certificateIdRef.current = id;
+  const closeWindow = (choose) => {
+    if(!choose){
+      setModalView(false);
+    }
   }
+
+  const convertDate = (dateToConvert) => {
+    var date = new Date(dateToConvert);
+    return date.toLocaleString();
+  }
+
+  const getTagsName = (tags) => {
+    let finalString = '';
+    tags.forEach(tag => {
+      finalString += tag.name+' '
+    });
+    return finalString;
+}
 
   return (
     <Container sx={{marginTop: 2, minHeight:"calc(100vh - 123px)"}} maxWidth="md">
@@ -129,7 +156,8 @@ export const MainPage = () => {
                  <StyledTableCell>Title</StyledTableCell>
                  <StyledTableCell align="center">Create date</StyledTableCell>
                  <StyledTableCell align="center">Tags</StyledTableCell>
-                 <StyledTableCell align="center">Price</StyledTableCell>
+                 <StyledTableCell align="center">Duration</StyledTableCell>
+                 <StyledTableCell align="center">Price</StyledTableCell>                 
                  <StyledTableCell align="center">Actions</StyledTableCell>
                </TableRow>
              </TableHead>
@@ -139,12 +167,16 @@ export const MainPage = () => {
                    <StyledTableCell component="th" scope="certificates">
                      {certificate.giftCertificateName}
                    </StyledTableCell>
-                   <StyledTableCell align="center">{certificate.createDate}</StyledTableCell>
+                   <StyledTableCell align="center">{convertDate(certificate.createDate)}</StyledTableCell>
                    <StyledTableCell align="center">{getTagsName(certificate.tags)}</StyledTableCell>
+                   <StyledTableCell align="center">{certificate.duration}</StyledTableCell>
                    <StyledTableCell align="center">{certificate.price}</StyledTableCell>
                    <StyledTableCell align="center">
                    <div className="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" style={{fontSize:"12px"}} className="btn btn-primary">View</button>
+                      <button type="button" style={{fontSize:"12px"}} className="btn btn-primary"
+                      onClick = {() => viewLogic(certificate.id, certificate.giftCertificateName,
+                      certificate.description,certificate.price, certificate.duration,certificate.createDate,
+                      certificate.lastUpdateDate, certificate.tags)}>View</button>
                       <button type="button" style={{fontSize:"12px"}} className="btn btn-info">Edit</button>
                       <button type="button" style={{fontSize:"12px"}} className="btn btn-light" 
                       onClick = {() => deleteLogic(certificate.id)}>Delete</button>
@@ -170,7 +202,10 @@ export const MainPage = () => {
         )
       }
         </Stack>
-        <ModalWindowDelete active={modalActive} setActive={setModalActive} certificateId={changeId} onDialog={areUSureDelete} />
+        <ModalWindowDelete active={modalDelete} setActive={setModalDelete} certificateId={itemId} onDialog={areUSureDelete} />
+        <ModalWindowItem active={modalView} setActive={setModalView} 
+        id={itemId} name={itemName} description={itemDescription} price={itemPrice} duration={itemDuration}
+        createdDate={convertDate(itemCreatedDate)} lastModifyedDate={convertDate(itemLastModifyedDate)} tags={itemTags} onClose={closeWindow} />
      </Container>
     );
 };
