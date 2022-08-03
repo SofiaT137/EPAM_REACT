@@ -22,7 +22,7 @@ const onSubmit=(data)=> {
   sendLoginRequest();
 }
 
-  const sendLoginRequest = async (event) => {
+  const sendLoginRequest = async () => {
     const login = document.querySelector('#login');
     const password = document.querySelector('#password');    
 

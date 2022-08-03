@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
-import {Container, Pagination, TextField, Stack, duration} from "@mui/material";
+import {Container, Pagination, TextField, Stack} from "@mui/material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import { ModalWindowDelete } from "././ModalWindow/ModalWindowDelete";
@@ -13,17 +13,14 @@ import Paper from '@mui/material/Paper';
 import { useRef } from "react";
 import StyledTableCell from './StyleTable/StyledTableCell'; 
 import StyledTableRow from './StyleTable/StyledTableRow'; 
-const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
-
+import useData from './../hooks/useData';
 
 export const MainPage = () => {
-  const [certificates, setCertificates] = useState([]);
   const [title, setTitle] = useState(''); 
   const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [pageQty, setPageQty] = useState(0);
   const [modalDelete, setModalDelete] = useState(false);
   const [modalView, setModalView] = useState(false);
+  const [forced, setForced] = useState(false);
   const [itemId, setItemId] = useState('');
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
@@ -32,7 +29,11 @@ export const MainPage = () => {
   const [itemCreatedDate, setItemCreatedDate] = useState('');
   const [itemLastModifyedDate, setItemLastModifyedDate] = useState('');
   const [itemTags, setItemTags] = useState('');
+  const [page, setPage] = useState(1);
   const certificateIdRef = useRef();
+  const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
+
+  const [pageQty, certificates] = useData(query,page,forced);
 
   const viewLogic = (id,name,description,price,duration,createdDate,lastModifyedDate,tags) => {
     setModalView(true);
@@ -45,25 +46,12 @@ export const MainPage = () => {
     setItemLastModifyedDate(lastModifyedDate);
     setItemTags(getTagsName(tags));    
   }
- 
+
   const deleteLogic = (id) => {
     setModalDelete(true);
     setItemId(id);
     certificateIdRef.current = id;
   }
-
-  useEffect(() => { 
-    URL = BASE_URL + `filter/?sortByCreationDate=desc${query}&pageNumber=${page-1}`;
-    axios.get(URL).then(
-      ({data}) => {
-      setCertificates(data.content)
-      setPageQty(data.totalPages)  
-      if(data.totalPages < page) {
-        setPage(1);
-      }
-    })
-  },[query, page])
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -75,6 +63,7 @@ export const MainPage = () => {
     const getQuery = (input) => {
     setQuery('')
     setPage(1)
+    setForced(false)
     var tagString = ''
     var nameString = ''
     var descriptionString = ''
@@ -96,7 +85,6 @@ export const MainPage = () => {
       'Authorization': 'Bearer_' + localStorage.getItem('token'),
     };
     if(choose){
-      setCertificates(certificates.filter(c => c.id !== certificateIdRef.current))
       const element = document.querySelector('#delete-request-error-handling .status');
       axios.delete(BASE_URL + certificateIdRef.current, {headers})
       .then(response => console.log(response.status))
@@ -104,18 +92,18 @@ export const MainPage = () => {
         element.parentElement.innerHTML = `Error: ${error.message}`;
         console.error('There was an error!', error);
     });
-      setModalDelete(false);      
-      setQuery(query);
-      setPage(page);
+      setModalDelete(false);    
+      setForced(!forced);
     }else {
       setModalDelete(false);
     }
   }
 
-  const closeWindow = (choose) => {
-    if(!choose){
-      setModalView(false);
+  const closeWindow = (update) => {
+    if(update){
+      setForced(!forced)
     }
+    setModalView(false);
   }
 
   const convertDate = (dateToConvert) => {

@@ -15,6 +15,7 @@ body {
   background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(21,200,210,0.208018241476278) 40%, rgba(0,212,255,1) 100%);
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .footer {
@@ -25,7 +26,6 @@ body {
   color: grey;
   font-size: 15px;  
   left: 0;
-  bottom: 0;
   width: 100%;
   height: 50px;
   flex-shrink: 0;
@@ -55,6 +55,7 @@ body {
 
 .errorMSG {
   color: red;
+  margin-bottom: 0.2rem;
 }
 
 .openModalWindowbtn {
