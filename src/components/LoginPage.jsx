@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 export const LoginPage = () => {
 
@@ -26,31 +27,27 @@ const onSubmit=(data)=> {
     const login = document.querySelector('#login');
     const password = document.querySelector('#password');    
 
-    const reqBody = {
-      login: login.value,
-      password: password.value,
+    const headers = { 
+      'Content-Type': 'application/json'
     };
 
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    const response = await fetch(
-        "http://localhost:8085/module2/auth/signIn",
-        {
-          headers,
-          method: "post",
-          body: JSON.stringify(reqBody),
+    axios.post("http://localhost:8085/module2/auth/signIn", {
+      login: login.value,
+      password: password.value,
+      }, {headers})
+      .then(response  => {
+        if(response.status === 200){
+          console.log(response)
+          localStorage.setItem('login', response.data.login)
+          localStorage.setItem('token',response.data.token)
+          navigate("/certificates")
         }
-      );
-      const data = await response.json();      
-      if (response.status === 200) {
-        localStorage.setItem('login', data.login)
-        localStorage.setItem('token',data.token)
-        navigate("/certificates")
-      }else {
-        setError(data.exceptionMessage)
-      }
+      })
+      .catch(error  => {
+        console.log(error);
+      });
   };
+
 
   return (
     <div id='form' className="col-8 col-md-4  mx-auto">

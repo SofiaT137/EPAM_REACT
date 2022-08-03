@@ -19,10 +19,8 @@ export const Header = () => {
 
   const closeWindow = async (update) => {
       if(update){
-      await new Promise(r => setTimeout(r, 2000));
       setForced(!forced);
       setModalActive(false);
-      navigate("/certificates")
     }
     setModalActive(false);
   }

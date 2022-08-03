@@ -7,6 +7,7 @@ const useData = (query, page, forced) => {
     const [certificates, setCertificates] = useState([]);
 
     const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
+    console.log('Hello from useData')
 
     useEffect(() => {     
         URL = BASE_URL + `filter/?sortByCreationDate=desc${query}&pageNumber=${page-1}`;
@@ -14,7 +15,6 @@ const useData = (query, page, forced) => {
           ({data}) => {
           setCertificates(data.content)
           setPageQty(data.totalPages)
-         
         })
       },[query, page, forced])
 

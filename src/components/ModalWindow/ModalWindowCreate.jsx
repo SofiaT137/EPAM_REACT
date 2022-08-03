@@ -4,60 +4,90 @@ import Modal from "react-bootstrap/Modal";
 import { TagsInput } from "react-tag-input-component";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
 
 export const ModalWindowCreate = ({ active, setActive, onClose }) => {
 
   const [selected, setSelected] = useState([]);
   const [error, setError] = useState(null);
-
+  const [tagLengthError, setTagLengthError] = useState(false);
+  const [tagIncorectName, setTagIncorectName] = useState('');
+  const [tagExceptionMessage, setTagExceptionMessage] = useState('');
 
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
+    reset
   } = useForm({
     mode: "all",
   });
 
-  const onSubmit = (data) => {
-    onClose(true)
+  const onSubmit = () => {
     sentSaveItemRequest();
+    clearFormFunction();
   };
 
-  const sentSaveItemRequest = async () => {
+
+  const beforeAddValidate = (tags) => {
+    if(!(tags[tags.length-1] === undefined)){
+      if(tags[tags.length-1].length < 3){
+        setTagIncorectName(tags[tags.length-1]);
+        setTagExceptionMessage(' Tag name length must be greater than 3');
+        setTagLengthError(true);
+        tags.pop();
+      }else if(tags[tags.length-1].length > 15){
+        setTagIncorectName(tags[tags.length-1]);
+        setTagExceptionMessage(' Tag name length must be mess than 15');
+        setTagLengthError(true);
+        tags.pop();
+      }
+    }    
+    return tags;
+  }
+
+  const onBlur = () => {
+    setTagLengthError(false);
+  }
+
+  const clearFormFunction = () => {
+    reset();
+    while(selected.length > 0) {
+      selected.pop();
+    }
+    onClose(false);   
+  }
+
+  const sentSaveItemRequest = () => {
     const giftCertificateName = document.querySelector("#giftCertificateName");
     const description = document.querySelector('#description');
     const price = document.querySelector("#price");
     const duration = document.querySelector("#duration");
+    const tags = selected;
 
-    const reqBody = {
+    const headers = { 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer_' + localStorage.getItem('token'),
+    };
+
+    axios.post(BASE_URL, {
       giftCertificateName: giftCertificateName.value,
       description: description.value,
       price: price.value,
-      duration: duration.value
-    };
-
-    let headers = new Headers();
-    console.log(reqBody)
-    headers.append("Content-Type", "application/json");
-    headers.append("Authorization", "Bearer_" + localStorage.getItem("token"));
-
-    const response = await fetch(
-      "http://localhost:8085/module2/gift_certificates",
-      {
-        headers,
-        method: "post",
-        body: JSON.stringify(reqBody),
-      }
-    );
-    const data = await response.json();
-    if (response.status === 200) {
-      console.log("Saved!");
-    } else {
-      setError(data.exceptionMessage);
-    }
+      duration: duration.value,
+      tags}, {headers})
+      .then(response  => {
+        if(response.status === 201){
+          console.log('saved');
+        }
+      })
+      .catch(error  => {
+        console.log(error);
+      });
   };
 
+ 
   return (
     <ModalWindow active={active} setActive={setActive}>
       <Modal.Dialog>
@@ -121,6 +151,7 @@ export const ModalWindowCreate = ({ active, setActive, onClose }) => {
                 type="number"
                 className="form-control"
                 id="price"
+                step=".01"
                 {...register("price", {
                   required: "Price cannot be empty!",
                   min: {
@@ -159,15 +190,18 @@ export const ModalWindowCreate = ({ active, setActive, onClose }) => {
               <label>Tags</label>
               <TagsInput
                 value={selected}
+                beforeAddValidate={beforeAddValidate(selected)}
+                onBlur={onBlur}
                 onChange={setSelected}
                 placeHolder="enter certificate tags"
               />
             </div>
+            {tagLengthError && <div className="errorMSG">Tag "{tagIncorectName}" is not correct.{tagExceptionMessage}</div>}
             <div className="buttonGroup">
               <Button variant="primary" type="submit" disabled={!isValid}>
                 Save
               </Button>
-              <Button variant="secondary" onClick={() => onClose(false)}>
+              <Button variant="secondary" onClick={() => clearFormFunction()}>
                 Cancel
               </Button>
             </div>
