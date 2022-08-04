@@ -1,16 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Button } from "./Button";
 import axios from "axios";
 import { ModalWindowDelete } from "./../ModalWindow/ModalWindowDelete";
-import useData from "./../../hooks/useData";
+import {Context} from "./../Context";
 
 export const DeleteButton = ({id}) => {
 
-    const [query, setQuery] = useState("");
-    const [page, setPage] = useState(1);
-    const [forced, setForced] = useState(false);
+    const {editForced, forced} = useContext(Context);
 
-    const [pageQty, certificates] = useData(query, page, forced);
+    const {} = useContext(Context);
 
     const [modalDelete, setModalDelete] = useState(false);
     const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
@@ -27,7 +25,7 @@ export const DeleteButton = ({id}) => {
               console.error("There was an error!", error);
             });
           setModalDelete(false);
-          setForced(!forced);
+          editForced(!forced);
         } else {
           setModalDelete(false);
         }

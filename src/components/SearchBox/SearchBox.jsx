@@ -1,16 +1,15 @@
 import { TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
-import useData from "./../../hooks/useData";
+import { useContext } from "react";
+import {Context} from "./../Context";
+
 
 export const SearchBox = () => {
 
   const [title, setTitle] = useState("");
-  const [query, setQuery] = useState("");
-  const [forced, setForced] = useState(false);
-  const [page, setPage] = useState(1);
 
-  const [pageQty, certificates] = useData(query, page, forced);
+  const {editForced, editPage, editQuery} = useContext(Context);
 
   const onSearchChange = (event) => {setTitle(event.target.value)};
 
@@ -22,9 +21,9 @@ export const SearchBox = () => {
   };
   
   const getQuery = (input) => {
-    setQuery("");
-    setPage(1);
-    setForced(false);
+    editQuery("");
+    editPage(1);
+    editForced(false);
     var tagString = "";
     var nameString = "";
     var descriptionString = "";
@@ -41,7 +40,7 @@ export const SearchBox = () => {
       tagString === ""
         ? nameString + descriptionString
         : tagString + nameString + descriptionString;
-    return setQuery(finalQuery);
+    return editQuery(finalQuery);
   };
   
   return (

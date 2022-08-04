@@ -6,23 +6,19 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Button from "react-bootstrap/Button";
-import useData from './../hooks/useData';
+import { useContext } from "react";
+import {Context} from "./Context";
 
 export const Header = () => {
 
   const [modalActive, setModalActive] = useState(false);
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [forced, setForced] = useState(false);
-  const [pageQty, certificates] = useData(query,page,forced);
   const navigate = useNavigate();
 
-  const closeWindow = async (update) => {
-      if(update){
-      setForced(!forced);
+  const {editForced, forced} = useContext(Context);
+
+  const closeWindow = () => {
+      editForced(!forced);
       setModalActive(false);
-    }
-    setModalActive(false);
   }
 
   let login = localStorage.getItem("login");

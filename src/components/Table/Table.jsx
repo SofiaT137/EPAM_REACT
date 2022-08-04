@@ -5,8 +5,8 @@ import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 
 const TableCustom = (props) => {
-const {certificates, onEditClick, onViewClick} = props;
-
+const {certificates, onEditClick} = props;
+console.log(certificates)
   return (
     <TableContainer sx={{ m: 1 }} component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="customized table">

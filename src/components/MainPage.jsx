@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Container,
   Pagination,
@@ -10,21 +10,18 @@ import {
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import TableCustom from "./Table/Table";
-import useData from "./../hooks/useData";
 import { SearchBox } from "./SearchBox/SearchBox";
+import {Context} from "./Context";
 
 export const MainPage = () => {
-  const [title, setTitle] = useState("");
-  const [query, setQuery] = useState("");
-  const [forced, setForced] = useState(false);
-  const [page, setPage] = useState(1);
-  const [open, setOpen] = useState(true);
 
-  const [pageQty, certificates] = useData(query, page, forced);
+  const [open, setOpen] = useState(true);
+  const {editPage, page, pageQty,certificates} = useContext(Context);
 
   const editLogic = () => {
 
   }
+
   return (
     <Container
       sx={{ marginTop: 2, minHeight: "calc(100vh - 123px)" }}
@@ -68,7 +65,7 @@ export const MainPage = () => {
             showLastButton
             variant="outlined"
             shape="rounded"
-            onChange={(_, num) => setPage(num)}
+            onChange={(_, num) => editPage(num)}
           />
         )}
       </Stack>
