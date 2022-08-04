@@ -11,7 +11,7 @@ import { Pagination } from "./Pagination/Pagination";
 
 export const MainPage = () => {
 
-  const {certificates} = useContext(Context);
+  const {certificates, error} = useContext(Context);  
 
   const editLogic = () => {
 
@@ -22,10 +22,16 @@ export const MainPage = () => {
       sx={{ marginTop: 2, minHeight: "calc(100vh - 123px)" }}
       maxWidth="md"
     >
-      <ErrorWindow />
+      {error ? (
+            <>
+              <ErrorWindow />
+            </>
+          ) : (
+            <></>
+          )}
       <SearchBox />
       <Stack spacing={3}>
-        <TableCustom certificates={certificates} onEditClick = {editLogic} />
+        <TableCustom certificates={certificates} onEditClick = {editLogic}/>
         <Pagination />
       </Stack>      
     </Container>

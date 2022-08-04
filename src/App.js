@@ -19,6 +19,7 @@ function App() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [forced, setForced] = useState(false);
+  const [error, setError] = useState('');
 
   const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
 
@@ -29,6 +30,9 @@ function App() {
       setCertificates(data.content)
       setPageQty(data.totalPages)
     })
+    .catch(error  => {
+      editError(error)
+    });
   },[query, page, forced])
 
   const editPage = (page) => {
@@ -42,11 +46,15 @@ function App() {
   const editQuery = (query) => {
     setQuery(query);
   }
+  
+  const editError = (error) => {
+    setError(error);
+  }
 
   return (
     <div>
       <Context.Provider value={{
-        editForced,editPage,editQuery, page, forced, query,pageQty,certificates
+        editForced,editPage,editQuery,editError,error,page, forced, query,pageQty,certificates
       }}>
       <Header />
       <Routes>

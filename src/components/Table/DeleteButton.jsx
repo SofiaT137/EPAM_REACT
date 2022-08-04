@@ -6,7 +6,7 @@ import {Context} from "./../Context";
 
 export const DeleteButton = ({id}) => {
 
-    const {editForced, forced} = useContext(Context);
+    const {editForced, forced, editError} = useContext(Context);
 
     const {} = useContext(Context);
 
@@ -22,7 +22,7 @@ export const DeleteButton = ({id}) => {
             .delete(BASE_URL + id, { headers })
             .then((response) => console.log(response.status))
             .catch((error) => {
-              console.error("There was an error!", error);
+              editError(error)
             });
           setModalDelete(false);
           editForced(!forced);

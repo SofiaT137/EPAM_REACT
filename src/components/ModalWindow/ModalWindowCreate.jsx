@@ -5,15 +5,19 @@ import { TagsInput } from "react-tag-input-component";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
+import { useContext } from "react";
+import {Context} from "./../Context";
+
 
 export const ModalWindowCreate = ({ active, setActive, onClose }) => {
 
+  const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
   const [selected, setSelected] = useState([]);
-  const [error, setError] = useState(null);
   const [tagLengthError, setTagLengthError] = useState(false);
   const [tagIncorectName, setTagIncorectName] = useState('');
   const [tagExceptionMessage, setTagExceptionMessage] = useState('');
+
+  const {editError, editForced, forced} = useContext(Context);  
 
   const {
     register,
@@ -83,7 +87,7 @@ export const ModalWindowCreate = ({ active, setActive, onClose }) => {
         }
       })
       .catch(error  => {
-        console.log(error);
+        editError(error)
       });
   };
 
