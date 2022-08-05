@@ -1,5 +1,3 @@
-// import {TableCell } from '@mui/material/TableCell';
-// import { tableCellClasses } from '@mui/material/TableCell';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 

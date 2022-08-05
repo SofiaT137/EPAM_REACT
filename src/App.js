@@ -20,11 +20,12 @@ function App() {
   const [page, setPage] = useState(1);
   const [forced, setForced] = useState(false);
   const [error, setError] = useState('');
+  const [pageSize, setPageSize] = useState(5);
 
   const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
 
   useEffect(() => {     
-    URL = BASE_URL + `filter/?sortByCreationDate=desc${query}&pageNumber=${page-1}`;
+    URL = BASE_URL + `filter/?sortByCreationDate=desc${query}&pageNumber=${page-1}&pageSize=${pageSize}`;
     axios.get(URL).then(
       ({data}) => {
       setCertificates(data.content)
@@ -51,10 +52,14 @@ function App() {
     setError(error);
   }
 
+  const editPageSize = (pageSize) => {
+    setPageSize(pageSize);
+  }
+
   return (
     <div>
       <Context.Provider value={{
-        editForced,editPage,editQuery,editError,error,page, forced, query,pageQty,certificates
+        editForced,editPage,editQuery,editError,editPageSize, error,page, forced, query,pageQty,certificates, pageSize, 
       }}>
       <Header />
       <Routes>

@@ -2,7 +2,7 @@ import {convertDate, getTagsNames } from './../../utils'
 import * as S from './styled';
 import {TableButtons} from './TableButtons'
 
-export const TableItem = ({certificate, onViewClick, onEditClick}) => {
+export const TableItem = ({certificate}) => {
 
   return (
     <>
@@ -19,11 +19,9 @@ export const TableItem = ({certificate, onViewClick, onEditClick}) => {
         {certificate.duration}
       </S.StyledTableCell>
       <S.StyledTableCell align="center">{certificate.price}</S.StyledTableCell>
-      <S.StyledTableCell align="center">
+      <S.StyledTableCell align="left">
         <TableButtons
           certificate={certificate}
-          onViewClick={onViewClick}
-          onEditClick={onEditClick}
         />
       </S.StyledTableCell>
     </>

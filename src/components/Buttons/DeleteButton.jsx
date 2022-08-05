@@ -7,9 +7,6 @@ import {Context} from "./../Context";
 export const DeleteButton = ({id}) => {
 
     const {editForced, forced, editError} = useContext(Context);
-
-    const {} = useContext(Context);
-
     const [modalDelete, setModalDelete] = useState(false);
     const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
 
@@ -36,7 +33,7 @@ export const DeleteButton = ({id}) => {
     }
 
     return (<>
-    <Button title="Delete" className="btn-light" onClick={handleDelete}></Button>
+    <Button title="Delete" className="btn-light" onClick={handleDelete} ></Button>
     <ModalWindowDelete
         active={modalDelete}
         setActive={setModalDelete}

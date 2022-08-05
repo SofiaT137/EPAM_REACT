@@ -3,12 +3,12 @@ import TableBody from '@mui/material/TableBody';
 import { TableItem } from './TableItem';
 
 
-export const TableBodyComponent = ({certificates, onEditClick }) => {
+export const TableBodyComponent = ({certificates}) => {
     return (
     <TableBody>
         {certificates.map((certificate) => (
           <S.StyledTableRow key={certificate.giftCertificateName}>
-            <TableItem certificate={certificate} onEditClick={onEditClick}/>
+            <TableItem certificate={certificate}/>
           </S.StyledTableRow>
         ))}
       </TableBody>)

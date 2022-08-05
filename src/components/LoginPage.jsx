@@ -23,7 +23,7 @@ const onSubmit=(data)=> {
   sendLoginRequest();
 }
 
-  const sendLoginRequest = async () => {
+  const sendLoginRequest = () => {
     const login = document.querySelector('#login');
     const password = document.querySelector('#password');    
 
@@ -44,7 +44,7 @@ const onSubmit=(data)=> {
         }
       })
       .catch(error  => {
-        console.log(error);
+        setError(error)
       });
   };
 

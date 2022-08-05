@@ -9,8 +9,7 @@ import { useContext } from "react";
 import {Context} from "./../Context";
 import { ModalHeader } from "./ModalHeader";
 
-
-export const ModalWindowCreate = ({ active, setActive, onClose }) => {
+export const ModalWindowEdit = ({ active, setActive, id, name, gsDescription,gsPrice,gsDuration,tags,onClose}) => {
 
   const BASE_URL = "http://localhost:8085/module2/gift_certificates/";
   const [selected, setSelected] = useState([]);
@@ -24,13 +23,14 @@ export const ModalWindowCreate = ({ active, setActive, onClose }) => {
     register,
     formState: { errors, isValid },
     handleSubmit,
+    getValues,
     reset
   } = useForm({
     mode: "all",
   });
 
-  const onSubmit = () => {    
-    sentSaveItemRequest();
+  const onSubmit = () => {
+    sentUpdateItemRequest();
     clearFormFunction();
   };
 
@@ -64,28 +64,27 @@ export const ModalWindowCreate = ({ active, setActive, onClose }) => {
     }    
     return tags;
   }
-  const sentSaveItemRequest = () => {
-    const giftCertificateName = document.querySelector("#giftCertificateName");
-    const description = document.querySelector('#description');
-    const price = document.querySelector("#price");
-    const duration = document.querySelector("#duration");
+  const sentUpdateItemRequest = () => {
+    const giftCertificateName = getValues("giftCertificateName");
+    const description = getValues("description");
+    const price = getValues("price");
+    const duration = getValues("duration"); 
     const tags = selected;
 
-   
     const headers = { 
       'Content-Type': 'application/json',
       'Authorization': 'Bearer_' + localStorage.getItem('token'),
     };
 
-    axios.post(BASE_URL, {
-      giftCertificateName: giftCertificateName.value,
-      description: description.value,
-      price: price.value,
-      duration: duration.value,
+    axios.patch(BASE_URL+id, {
+      giftCertificateName: giftCertificateName === '' ? name : giftCertificateName,
+      description: description === '' ? gsDescription : description,
+      price: price === '' ? gsPrice : price,
+      duration: duration === '' ? gsDuration : duration,
       tags}, {headers})
       .then(response  => {
-        if(response.status === 201){
-          console.log('saved');
+         if(response.status === 201){
+          console.log('updated');
         }
       })
       .catch(error  => {
@@ -98,18 +97,17 @@ export const ModalWindowCreate = ({ active, setActive, onClose }) => {
     <ModalWindow active={active} setActive={setActive}>
       <Modal.Dialog>
 
-        <ModalHeader title={"Add new certificate"}/>
+      <ModalHeader title={'Edit certificate with id = '+ id }/>
 
         <Modal.Body>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="form-group">
-              <label htmlFor="giftCertificateName">Name</label>
+              <label htmlFor="gsName">Name</label>
               <input
                 type="text"
                 className="form-control"
-                id="giftCertificateName"
+                id="gsName"
                 {...register("giftCertificateName", {
-                  required: "Name cannot be empty!",
                   minLength: {
                     value: 6,
                     message: "Minimum name length is 6",
@@ -127,13 +125,12 @@ export const ModalWindowCreate = ({ active, setActive, onClose }) => {
               )}
             </div>
             <div className="form-group">
-              <label htmlFor="description">Description</label>
+              <label htmlFor="gsDescription">Description</label>
               <textarea
                 className="form-control"
-                id="description"
+                id="gsDescription"
                 rows="2"
                 {...register("description", {
-                  required: "Description cannot be empty!",
                   minLength: {
                     value: 12,
                     message: "Minimum description length is 12",
@@ -151,14 +148,13 @@ export const ModalWindowCreate = ({ active, setActive, onClose }) => {
               )}
             </div>
             <div className="form-group">
-              <label htmlFor="price">Price</label>
+              <label htmlFor="gsPrice">Price</label>
               <input
                 type="number"
                 className="form-control"
-                id="price"
+                id="gsPrice"
                 step=".01"
                 {...register("price", {
-                  required: "Price cannot be empty!",
                   min: {
                     value: 1.0,
                     message: "Minimum price is 1.0",
@@ -172,13 +168,12 @@ export const ModalWindowCreate = ({ active, setActive, onClose }) => {
               )}
               </div>
             <div className="form-group">
-              <label htmlFor="duration">Duration</label>
+              <label htmlFor="gsDuration">Duration</label>
               <input
                 type="number"
                 className="form-control"
-                id="duration"
+                id="gsDuration"
                 {...register("duration", {
-                  required: "Duration cannot be empty!",
                   min: {
                     value: 1,
                     message: "Minimum duration is 1",
@@ -204,9 +199,9 @@ export const ModalWindowCreate = ({ active, setActive, onClose }) => {
             {tagLengthError && <div className="errorMSG">Tag "{tagIncorectName}" is not correct.{tagExceptionMessage}</div>}
             <div className="buttonGroup">
               <Button variant="primary" type="submit" disabled={!isValid}>
-                Save
+                Edit
               </Button>
-              <Button variant="secondary" onClick={clearFormFunction}>
+              <Button variant="secondary" onClick={() => clearFormFunction()}>
                 Cancel
               </Button>
             </div>

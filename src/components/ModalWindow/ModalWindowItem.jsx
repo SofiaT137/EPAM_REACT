@@ -1,15 +1,15 @@
 import { ModalWindow } from "./ModalWindow";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { ModalHeader } from "./ModalHeader";
 
 export const ModalWindowItem = ({active, setActive, id,name, 
     description,price,duration,createdDate,lastModifyedDate,tags, onClose}) => {
     return (
         <ModalWindow active={active} setActive={setActive}>
         <Modal.Dialog>
-          <Modal.Header>
-            <Modal.Title>Item information</Modal.Title>
-          </Modal.Header>
+
+        <ModalHeader title={"Item information"}/>
     
           <Modal.Body>
             <p>Certificate id : {id}</p>

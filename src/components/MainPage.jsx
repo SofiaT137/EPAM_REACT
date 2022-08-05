@@ -10,12 +10,8 @@ import { ErrorWindow } from "./ErrorWindow/ErrorWindow";
 import { Pagination } from "./Pagination/Pagination";
 
 export const MainPage = () => {
-
+  
   const {certificates, error} = useContext(Context);  
-
-  const editLogic = () => {
-
-  }
 
   return (
     <Container
@@ -31,7 +27,7 @@ export const MainPage = () => {
           )}
       <SearchBox />
       <Stack spacing={3}>
-        <TableCustom certificates={certificates} onEditClick = {editLogic}/>
+        <TableCustom certificates={certificates} />
         <Pagination />
       </Stack>      
     </Container>

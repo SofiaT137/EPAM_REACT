@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "./Button";
-import { ModalWindowItem } from "./../ModalWindow/ModalWindowItem";
-import {convertDate, getTagsNames} from "./../../utils"
+import { ModalWindowItem } from "../ModalWindow/ModalWindowItem";
+import {convertDate, getTagsNames} from "../../utils"
 
 export const ViewButton = ({id, name, description, price, duration, createDate, lastUpdateDate, tags}) => {
 
