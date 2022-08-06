@@ -1,8 +1,5 @@
 import { useContext } from "react";
-import {
-  Container,
-  Stack
-} from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import TableCustom from "./Table/Table";
 import { SearchBox } from "./SearchBox/SearchBox";
 import { Context } from "./Context";
@@ -10,8 +7,7 @@ import { ErrorWindow } from "./ErrorWindow/ErrorWindow";
 import { Pagination } from "./Pagination/Pagination";
 
 export const MainPage = () => {
-  
-  const {certificates, error} = useContext(Context);  
+  const { certificates, error } = useContext(Context);
 
   return (
     <Container
@@ -19,17 +15,17 @@ export const MainPage = () => {
       maxWidth="md"
     >
       {error ? (
-            <>
-              <ErrorWindow />
-            </>
-          ) : (
-            <></>
-          )}
+        <>
+          <ErrorWindow />
+        </>
+      ) : (
+        <></>
+      )}
       <SearchBox />
       <Stack spacing={3}>
         <TableCustom certificates={certificates} />
         <Pagination />
-      </Stack>      
+      </Stack>
     </Container>
   );
 };

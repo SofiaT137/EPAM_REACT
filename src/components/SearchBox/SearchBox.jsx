@@ -2,17 +2,17 @@ import { TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import { useContext } from "react";
-import {Context} from "./../Context";
+import { Context } from "./../Context";
 import { getQuery } from "../../utils";
 
-
 export const SearchBox = () => {
-
   const [title, setTitle] = useState("");
 
-  const {editPage, editQuery} = useContext(Context);
+  const { editPage, editQuery } = useContext(Context);
 
-  const onSearchChange = (event) => {setTitle(event.target.value)};
+  const onSearchChange = (event) => {
+    setTitle(event.target.value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,7 +21,7 @@ export const SearchBox = () => {
       editQuery(getQuery(title, "Name"));
     }
   };
-  
+
   return (
     <form noValidate autoComplete="off" onSubmit={handleSubmit}>
       <TextField
