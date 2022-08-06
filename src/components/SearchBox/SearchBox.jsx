@@ -3,44 +3,23 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import { useContext } from "react";
 import {Context} from "./../Context";
+import { getQuery } from "../../utils";
 
 
 export const SearchBox = () => {
 
   const [title, setTitle] = useState("");
 
-  const {editForced, editPage, editQuery} = useContext(Context);
+  const {editPage, editQuery} = useContext(Context);
 
   const onSearchChange = (event) => {setTitle(event.target.value)};
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (title) {
-      getQuery(title);
+      editPage(1);
+      editQuery(getQuery(title, "Name"));
     }
-  };
-  
-  const getQuery = (input) => {
-    editQuery("");
-    editPage(1);
-    editForced(false);
-    var tagString = "";
-    var nameString = "";
-    var descriptionString = "";
-    var array = input.split(" ");
-    array.forEach((element) => {
-      if (element.startsWith("#", 0)) {
-        tagString += "&tagName=" + element.slice(1);
-      } else {
-        nameString += "&partName=" + element;
-        // descriptionString+='&partDescription='+element;
-      }
-    });
-    let finalQuery =
-      tagString === ""
-        ? nameString + descriptionString
-        : tagString + nameString + descriptionString;
-    return editQuery(finalQuery);
   };
   
   return (
