@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { parseJWT } from "./../utils/parseJWT"
 import axios from "axios";
 
 export const LoginPage = () => {
@@ -10,17 +11,22 @@ export const LoginPage = () => {
     formState: {
       errors, isValid
     },
-    handleSubmit
+    handleSubmit,
+    reset
   } = useForm({
-    mode:"onBlur"
+    mode:"all"
   });
 
 const navigate = useNavigate();
 
-const [error, setError] = useState(null);
+const [error, setError] = useState('');
 
-const onSubmit=(data)=> {
+const onSubmit=()=> {
   sendLoginRequest();
+}
+
+const cleanError = () => {
+  setError('')
 }
 
   const sendLoginRequest = () => {
@@ -37,15 +43,26 @@ const onSubmit=(data)=> {
       }, {headers})
       .then(response  => {
         if(response.status === 200){
-          console.log(response)
-          localStorage.setItem('login', response.data.login)
-          localStorage.setItem('token',response.data.token)
-          navigate("/certificates")
+          if(parseJWT(response.data.token).roles != 'ROLE_ADMINISTRATOR'){
+            navigate("/forbidden")
+          }else{
+            localStorage.setItem('login', response.data.login)
+            localStorage.setItem('token',response.data.token)
+            navigate("/certificates")
+          }
         }
       })
       .catch(error  => {
-        setError(error)
-      });
+          if(error.response.status === 404){
+            setError("Check the passord!")            
+          }else if (error.response.status === 500){
+            setError("Cannot find this user!")
+          }else {
+            setError(error.message)
+          }
+          reset();
+        }
+      );
   };
 
 
@@ -65,7 +82,8 @@ const onSubmit=(data)=> {
                 value:30,
                 message:"Maximum login length is 30"
               },
-            })}/>
+              onChange: cleanError
+              })}/>
           </div>
         <div className="errorMSG">{errors?.login && <p>
           {errors?.login?.message || "Error!"}</p>}</div>
@@ -81,6 +99,7 @@ const onSubmit=(data)=> {
                 value:30,
                 message:"Maximum password length is 30"
               },
+              onChange: cleanError              
             })}/>
           </div>
         <div className="errorMSG">{errors?.password && 

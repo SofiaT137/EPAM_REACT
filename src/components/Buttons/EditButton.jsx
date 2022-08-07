@@ -27,7 +27,7 @@ export const EditBotton = ({
 
   return (
     <>
-      <Button title="Edit" className="btn-info" onClick={handleEdit}></Button>
+      <Button title="Edit" className="btn-info" onClick={handleEdit} />
       <ModalWindowEdit
         active={modalActive}
         setActive={setModalActive}

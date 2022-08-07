@@ -8,6 +8,7 @@ import { Context } from "./components/Context";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
+import { ForbittenEntrancePage } from "./components/ForbittenEntrancePage";
 
 function App() {
   const [pageQty, setPageQty] = useState(0);
@@ -83,6 +84,7 @@ function App() {
         <Routes>
           <Route path="login" element={<LoginPage />} />
           <Route path="certificates" element={<MainPage />} />
+          <Route path="forbidden" element={<ForbittenEntrancePage />} />
         </Routes>
         <Footer />
       </Context.Provider>

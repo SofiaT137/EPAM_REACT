@@ -16,7 +16,7 @@ export const ViewButton = ({id, name, description, price, duration, createDate, 
       }
 
     return (<>
-    <Button title="View" className="btn-primary" onClick={handleView}></Button>
+    <Button title="View" className="btn-primary" onClick={handleView} />
     <ModalWindowItem
         active={modalView}
         setActive={setModalView}

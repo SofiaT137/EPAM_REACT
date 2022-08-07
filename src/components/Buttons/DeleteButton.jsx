@@ -33,7 +33,7 @@ export const DeleteButton = ({id}) => {
     }
 
     return (<>
-    <Button title="Delete" className="btn-light" onClick={handleDelete} ></Button>
+    <Button title="Delete" className="btn-light" onClick={handleDelete} />
     <ModalWindowDelete
         active={modalDelete}
         setActive={setModalDelete}
